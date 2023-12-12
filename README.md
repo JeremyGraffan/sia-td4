@@ -66,6 +66,52 @@ Lien: https://github.com/JeremyGraffan/sia-td4/blob/master/code/q3.c
 
 ## Question 4
 
+Pour simuler l'AlphaBot dans le cadre du logiciel Webot nous avons réutilisé le Khepera III en conservant uniquement
+2 capteurs avant et en binarisant leur valeur (0 ou 1 à partir d'un seuil).
+```c
+double binarize_sensor_value(double sensor_value) {
+  return sensor_value > 40 ? 1 : 0;
+}
+
+void question_4() {
+  const double alphabot_matrix[2][2] = {{-9, 9}, {9, -9}};
+  const int alphabot_sensor_indexes[ALPHABOT_SENSOR_COUNT] = {2, 5};
+  const double base_speed = 10;
+  double speed[2] = {0, 0};
+
+  while (wb_robot_step(time_step) != -1) {
+    double sensors_value[ALPHABOT_SENSOR_COUNT];
+
+    for (int i = 0; i < ALPHABOT_SENSOR_COUNT; i++) {
+      double initial_sensor_value =
+          wb_distance_sensor_get_value(sensors[alphabot_sensor_indexes[i]]);
+      sensors_value[i] = binarize_sensor_value(initial_sensor_value);
+    }
+
+    for (int i = 0; i < 2; i++) {
+      speed[i] = base_speed;
+
+      for (int j = 0; j < ALPHABOT_SENSOR_COUNT; j++) {
+        speed[i] += alphabot_matrix[j][i] * (1.0 - sensors_value[j]);
+      }
+      speed[i] = BOUND(speed[i], -max_speed, max_speed);
+    }
+
+    wb_motor_set_velocity(left_motor, speed[0]);
+    wb_motor_set_velocity(right_motor, speed[1]);
+  }
+}
+```
+Pour implémenter le réseau de neurone selon Braintenberg, nous utilisons une vitesse constante de 10
+et des poids symétriques de -9 et 9.
+
+### Équation
+Nous considérons $X_0$ le capteur gauche a $X_1$ le capteur droit.
+$$ Vr = {k * \sum_{x=0}^{2} (W_{ri}.X_i)} = {1 * ( -9.X_0 + 9.X_1 ) }$$
+
+$$ Vl = {k * \sum_{x=0}^{2} (W_{li}.X_i)} = {1 * ( 9.X_0 + -9.X_1 ) }$$
+
+
 ## Question 5
 
 ### Automate
