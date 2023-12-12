@@ -14,11 +14,6 @@
 
 static WbDeviceTag sensors[SENSOR_NUMBER], left_motor, right_motor;
 
-static const double matrix[9][2] = {
-    {-2.67, -2.67},  {-10.86, 21.37}, {-16.03, 26.71},
-    {-37.4, 37.4},   {37.4, -32.06},  {26.71, -21.37},
-    {21.37, -10.86}, {-2.67, -2.67},  {-5.34, -5.34}};
-
 static const int num_sensors = SENSOR_NUMBER;
 static const double range = RANGE;
 static int time_step = 0;
@@ -66,30 +61,6 @@ static void initialize() {
          robot_name, num_sensors);
 }
 
-void braitenberg() {
-  while (wb_robot_step(time_step) != -1) { // Run simulation
-    int i, j;
-    double speed[2];
-    double sensors_value[num_sensors];
-
-    for (i = 0; i < num_sensors; i++)
-      sensors_value[i] = wb_distance_sensor_get_value(sensors[i]);
-
-    for (i = 0; i < 2; i++) {
-      speed[i] = 0.0;
-
-      for (j = 0; j < num_sensors; j++) {
-        speed[i] += matrix[j][i] * (1.0 - (sensors_value[j] / range));
-      }
-
-      speed[i] = BOUND(speed[i], -max_speed, max_speed);
-    }
-
-    wb_motor_set_velocity(left_motor, speed[0]);
-    wb_motor_set_velocity(right_motor, speed[1]);
-  }
-}
-
 void question_2() {
   static const int front_sensor_indexes[FRONT_SENSOR_COUNT] = { 2, 3, 4, 5 };
   static const double speed = 10;
@@ -115,6 +86,5 @@ void question_2() {
 int main() {
   initialize();
   question_2();
-
   return 0;
 }
