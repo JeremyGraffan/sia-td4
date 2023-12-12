@@ -1,10 +1,23 @@
 # TD 4
 
+## Groupe
+- BEZES Bastien
+- GRAFFAN Jérémy
+- ELKATEB Sami
+
+## Github avec les codes sources et les vidéos
+Lien: https://github.com/JeremyGraffan/sia-td4/tree/master
+
 ## Question 2 (Simulateur)
 
+### Principe de fonctionnement
+On utilise les 4 capteurs situés a l'avant du robot. Le robot avance en ligne droite avec une vitesse constante. Lorsque l'un des capteurs détecte un obstacle (valeur supérieur a une limite définie), on stop le robot.
+
 ### Vidéo
+Lien: https://github.com/JeremyGraffan/sia-td4/raw/master/video/q2.mp4
 
 ### Code
+Lien: https://github.com/JeremyGraffan/sia-td4/blob/master/code/q2.c
 
 ## Question 3 (Simulateur)
 
@@ -15,6 +28,7 @@
 ### Équation
 
 ### Code
+
 
 ## Question 4
 
