@@ -35,18 +35,7 @@ void enable_sensors() {
   for (i = 0; i < num_sensors; i++) {
     sensors[i] = wb_robot_get_device(sensors_name);
     wb_distance_sensor_enable(sensors[i], time_step);
-
-    if ((i + 1) >= 10) {
-      sensors_name[2] = '1';
-      sensors_name[3]++;
-
-      if ((i + 1) == 10) {
-        sensors_name[3] = '0';
-        sensors_name[4] = '\0';
-      }
-    } else {
-      sensors_name[2]++;
-    }
+    sensors_name[2]++;
   }
 }
 
