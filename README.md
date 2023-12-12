@@ -116,6 +116,8 @@ $$ Vl = {k * \sum_{x=0}^{2} (W_{li}.X_i)} = {1 * ( 9.X_0 + -9.X_1 ) }$$
 
 ### Automate
 
+![](./image/state_machine.drawio.png)
+
 ### Vidéo
 
 #### Code
