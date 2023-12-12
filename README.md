@@ -1,9 +1,7 @@
-# TD 4
-
-## Groupe
-- BEZES Bastien
-- GRAFFAN Jérémy
-- ELKATEB Sami
+---
+title: "TD 4 - Principes des Architectures des Systèmes Autonomes Intelligents"
+author: "BEZES Bastien, GRAFFAN Jérémy, ELKATEB Sami"
+---
 
 ## Github avec les codes sources et les vidéos
 Lien: https://github.com/JeremyGraffan/sia-td4/tree/master
