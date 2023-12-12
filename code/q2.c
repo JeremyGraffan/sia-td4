@@ -50,7 +50,7 @@ static void initialize() {
          robot_name, num_sensors);
 }
 
-void question_2() {
+void process() {
   static const int front_sensor_indexes[FRONT_SENSOR_COUNT] = { 2, 3, 4, 5 };
   static const double speed = 10;
   
@@ -74,6 +74,6 @@ void question_2() {
 
 int main() {
   initialize();
-  question_2();
+  process();
   return 0;
 }

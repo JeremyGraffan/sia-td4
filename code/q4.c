@@ -58,57 +58,11 @@ static void initialize() {
          robot_name, num_sensors);
 }
 
-void braitenberg() {
-  while (wb_robot_step(time_step) != -1) { // Run simulation
-    int i, j;
-    double speed[2];
-    double sensors_value[num_sensors];
-
-    for (i = 0; i < num_sensors; i++)
-      sensors_value[i] = wb_distance_sensor_get_value(sensors[i]);
-
-    for (i = 0; i < 2; i++) {
-      speed[i] = 0.0;
-
-      for (j = 0; j < num_sensors; j++) {
-        speed[i] += matrix[j][i] * (1.0 - (sensors_value[j] / range));
-      }
-
-      speed[i] = BOUND(speed[i], -max_speed, max_speed);
-    }
-
-    wb_motor_set_velocity(left_motor, speed[0]);
-    wb_motor_set_velocity(right_motor, speed[1]);
-  }
-}
-
-void question_2() {
-  static const int front_sensor_indexes[FRONT_SENSOR_COUNT] = {2, 3, 4, 5};
-  static const double speed = 10;
-
-  while (wb_robot_step(time_step) != -1) {
-    double sensors_value[FRONT_SENSOR_COUNT];
-    double current_speed = speed;
-
-    for (int i = 0; i < FRONT_SENSOR_COUNT; i++) {
-      sensors_value[i] =
-          wb_distance_sensor_get_value(sensors[front_sensor_indexes[i]]);
-      if (sensors_value[i] > 100.0) {
-        current_speed = 0;
-        break;
-      }
-    }
-
-    wb_motor_set_velocity(left_motor, current_speed);
-    wb_motor_set_velocity(right_motor, current_speed);
-  }
-}
-
 double binarize_sensor_value(double sensor_value) {
   return sensor_value > 40 ? 1 : 0;
 }
 
-void question_4() {
+void process() {
   const double alphabot_matrix[2][2] = {{-9, 9}, {9, -9}};
   const int alphabot_sensor_indexes[ALPHABOT_SENSOR_COUNT] = {2, 5};
   const double base_speed = 10;
@@ -139,9 +93,7 @@ void question_4() {
 
 int main() {
   initialize();
-  // braitenberg();
-  // question_2();
-  question_4();
+  process();
 
   return 0;
 }
