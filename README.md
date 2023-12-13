@@ -139,6 +139,7 @@ et des poids symétriques de -9 et 9.
 
 ### Équation
 Nous considérons $X_0$ le capteur gauche a $X_1$ le capteur droit.
+
 $$ Vr = {k * \sum_{x=0}^{2} (W_{ri}.X_i)} = {1 * ( -9.X_0 + 9.X_1 ) }$$
 
 $$ Vl = {k * \sum_{x=0}^{2} (W_{li}.X_i)} = {1 * ( 9.X_0 + -9.X_1 ) }$$
