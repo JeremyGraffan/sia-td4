@@ -70,6 +70,7 @@ $$
 Vr = k * \sum_{x=0}^{8} (W_{ri}.X_i) \\
 \end{aligned}
 $$
+
 $$ 
 \begin{aligned}
 Vr = 1 * ( -2.67.X_0 + 21.37.X_1 + 26.71.X_2 \\
