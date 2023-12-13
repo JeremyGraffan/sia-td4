@@ -155,6 +155,56 @@ $$ Vl = {k * \sum_{x=0}^{2} (W_{li}.X_i)} = {1 * ( 9.X_0 + -9.X_1 ) }$$
 
 #### Code
 
+```c
+enum State {
+  FORWARD,
+  ROTATE_RIGHT,
+  ROTATE_LEFT
+};
+
+void process() {
+  const int alphabot_sensor_indexes[ALPHABOT_SENSOR_COUNT] = {3, 4};
+  double speed[2] = {0, 0};
+  enum State state = FORWARD;
+
+  while (wb_robot_step(time_step) != -1) {
+    double sensors_value[ALPHABOT_SENSOR_COUNT];
+
+    for (int i = 0; i < ALPHABOT_SENSOR_COUNT; i++) {
+      double initial_sensor_value =
+          wb_distance_sensor_get_value(sensors[alphabot_sensor_indexes[i]]);
+      sensors_value[i] = binarize_sensor_value(initial_sensor_value);
+    }
+
+    if(sensors_value[0] == 0 && sensors_value[1] == 0) {
+      state = FORWARD;
+    } else if (sensors_value[0] == 0 && sensors_value[1] == 1) {
+      state = ROTATE_LEFT;
+    } else if (sensors_value[0] == 1) {
+      state = ROTATE_RIGHT;
+    } 
+
+    switch (state) {
+      case FORWARD:
+        speed[0] = 19;  
+        speed[1] = 19;  
+        break;
+      case ROTATE_LEFT:
+        speed[0] = 0;  
+        speed[1] = 19;  
+        break;
+      case ROTATE_RIGHT:
+        speed[0] = 19;  
+        speed[1] = 0;  
+        break;
+    }
+
+    wb_motor_set_velocity(left_motor, speed[0]);
+    wb_motor_set_velocity(right_motor, speed[1]);
+  }
+}
+```
+
 ## Question 6 (Simulateur)
 
 ### Vidéo
