@@ -83,10 +83,10 @@ void obstacle_back(double *sensors_value, double *speeds, double *proposed_speed
   speeds[RIGHT] = proposed_speeds[RIGHT];
 
   if (max_left > CRITICAL_DISTANCE) {
-    speeds[RIGHT] = -3;
+    speeds[LEFT] = -3;
   } 
   if (max_right > CRITICAL_DISTANCE) {
-    speeds[LEFT] = -3;
+    speeds[RIGHT] = -3;
   }
 }
 
@@ -101,7 +101,7 @@ void avoid_right(double *sensors_value, double *speeds) {
   } 
 }
 
-void process() {
+void subsumption_architecture() {
   double speed[2] = {0, 0};
   double proposed_speeds[2] = {0, 0};
   int wander_cooldown = WANDER_COOLDOWN;
@@ -133,7 +133,7 @@ void process() {
 
 int main() {
   initialize();
-  process();
+  subsumption_architecture();
 
   return 0;
 }
