@@ -59,7 +59,7 @@ enum State {
 void process() {
   enum State state = FORWARD;
 
-  double CRITICAL_DISTANCE = 100;
+  double CRITICAL_DISTANCE = 60;
   int obstacle_avoidance_counter = 0;
 
   while (wb_robot_step(time_step) != -1) {
