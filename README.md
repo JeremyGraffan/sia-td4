@@ -240,9 +240,76 @@ void process() {
 ## Question 6 (Simulateur)
 _Quel algorithme mettriez-vous en place pour un suivi de contours d’obstacles par la droite sur le Khepera III ? Implémentez et testez._
 
+Pour éviter un obstacle par la droite, il est dans un premier temps nécessaire de tourner vers la gauche 
+lorsque nous rencontrons un obstacle pour que celui-ci se trouve à droite du robot.
+Pour effectuer le suivit de l'obstacle nous pouvons ensuite accélérer la roue droite lorsque nous nous rapprochons 
+trop de l'obstacle et la ralentir lorsque nous nous en éloignons pour conserver la distance désirée.
+Les capteurs du Khepera sont sensibles il est possible de perdre de vue un obstacle que nous sommes entrain de suivre.
+Pour palier ce problème nous pouvons utiliser un compteur et une machine à état 
+pour conserver le suivit de l'obstacle sur une durée convenable.
+
 ### Vidéo
 
+[Téléchargement de la vidéo](https://github.com/JeremyGraffan/sia-td4/raw/master/video/q6.mp4)
+
 #### Code
+
+```c
+enum State {
+  AVOIDING,
+  FORWARD
+};
+
+void process() {
+  enum State state = FORWARD;
+
+  double CRITICAL_DISTANCE = 100;
+  int obstacle_avoidance_counter = 0;
+
+  while (wb_robot_step(time_step) != -1) {
+    double speed[2] = {0, 0};
+    double sensors_value[SENSOR_NUMBER];
+    for (int i = 0; i < SENSOR_NUMBER; i++) {
+      sensors_value[i] = wb_distance_sensor_get_value(sensors[i]);
+    }
+
+    double max_right = fmax(sensors_value[4], fmax(sensors_value[5], sensors_value[6]));
+    double max_left = fmax(sensors_value[1], fmax(sensors_value[2], sensors_value[3]));
+
+    if (max_right > CRITICAL_DISTANCE || max_left > CRITICAL_DISTANCE) {
+      state = AVOIDING;
+      obstacle_avoidance_counter = STICKYNESS;
+    } else if(obstacle_avoidance_counter <= 0){
+        state = FORWARD;
+    }
+
+    if (state == AVOIDING) {
+      if (max_left > CRITICAL_DISTANCE) {
+          speed[1] = 10.0;
+          speed[0] = -10.0;
+      } else if (max_right > CRITICAL_DISTANCE) {
+          speed[1] = 10.0;
+          speed[0] = -10.0;
+      } else {
+        speed[0] = 12.0;
+        speed[1] = 3.0;
+      }
+      obstacle_avoidance_counter--;
+    } 
+
+    if(state == FORWARD) {
+        speed[0] = 10.0;
+        speed[1] = 10.0;
+    }
+
+    speed[0] = BOUND(speed[0], -max_speed, max_speed);
+    speed[1] = BOUND(speed[1], -max_speed, max_speed);
+
+    wb_motor_set_velocity(left_motor, speed[0]);
+    wb_motor_set_velocity(right_motor, speed[1]);
+  }
+}
+```
 
 [Code complet](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q6.c)
 
