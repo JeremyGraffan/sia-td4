@@ -172,9 +172,16 @@ _Si vous deviez fournir un algorithme d’évitement d’obstacle pour l’Alpha
 
 ### Automate
 
+L'AlphaBot démarre dans l'état FORWARD où il avance tout droit. Si le capteur 
+gauche détecte un objet et non le capteur droit, l'AlphaBot tourne vers la droite.
+Lorsque le capteur ne détècte plus d'objet, l'AlphaBot recommence à se déplacer en ligne droite.
+Si le capteur droit détecte un object (seul ou accompagné du capteur gauche), l'Alphabot tourne vers la gauche.
+Lors des mouvements de rotation, une seule des deux roues est en mouvement.
 ![Automate à état fini AphaBot](./image/state_machine.drawio.png)
 
 ### Vidéo
+
+[Téléchargement de la vidéo](https://github.com/JeremyGraffan/sia-td4/raw/master/video/q5.mp4)
 
 #### Code
 
@@ -227,6 +234,8 @@ void process() {
   }
 }
 ```
+[Code complet](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q5.c)
+
 
 ## Question 6 (Simulateur)
 _Quel algorithme mettriez-vous en place pour un suivi de contours d’obstacles par la droite sur le Khepera III ? Implémentez et testez._
