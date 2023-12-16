@@ -60,7 +60,7 @@ void process() {
 
     for (int i = 0; i < FRONT_SENSOR_COUNT; i++) {
       sensors_value[i] = wb_distance_sensor_get_value(sensors[front_sensor_indexes[i]]);
-      if (sensors_value[i] > 100.0 )
+      if (sensors_value[i] > 50.0 )
       {
         current_speed = 0;
         break;

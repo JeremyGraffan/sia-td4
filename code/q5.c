@@ -61,7 +61,7 @@ enum State {
 };
 
 void process() {
-  const int alphabot_sensor_indexes[ALPHABOT_SENSOR_COUNT] = {3, 4};
+  const int alphabot_sensor_indexes[ALPHABOT_SENSOR_COUNT] = {2, 5};
   double speed[2] = {0, 0};
   enum State state = FORWARD;
 
@@ -84,16 +84,16 @@ void process() {
 
     switch (state) {
       case FORWARD:
-        speed[0] = 19;  
-        speed[1] = 19;  
+        speed[0] = 10;  
+        speed[1] = 10;  
         break;
       case ROTATE_LEFT:
-        speed[0] = 0;  
-        speed[1] = 19;  
+        speed[0] = -10;  
+        speed[1] = 10;  
         break;
       case ROTATE_RIGHT:
-        speed[0] = 19;  
-        speed[1] = 0;  
+        speed[0] = 10;  
+        speed[1] = -10;  
         break;
     }
 
