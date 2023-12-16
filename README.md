@@ -244,6 +244,8 @@ _Quel algorithme mettriez-vous en place pour un suivi de contours d’obstacles 
 
 #### Code
 
+[Code complet](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q6.c)
+
 ## Question 7
 _Si vous voulez implémenter un suivi de ligne grâce aux capteurs du robot Alphabot2, que proposeriez-vous comme algorithme ? Implémentez et testez._
 
@@ -251,6 +253,103 @@ _Si vous voulez implémenter un suivi de ligne grâce aux capteurs du robot Alph
 
 _Mettez en place deux stratégies de coordination différentes et testez les différences_
 
-### Vidéo
+### Stratégie 1: Subsomption
 
-### Code
+Notre première approche à consisté en une architecture par subsomption.
+Dans notre cas nous avons 2 couches:
+
+- une couche d'évitement (`obstacle_back` & `avoid_right`)
+- une couche d'exploration (`wander` & `go_forward`)
+
+Seul le comportement `obstacle_back` peut accéder aux moteurs. 
+
+**Code:**
+
+```c
+void subsumption_architecture() {
+  double speed[2] = {0, 0};
+  double proposed_speeds[2] = {0, 0};
+  int wander_cooldown = WANDER_COOLDOWN;
+  int wander_remaining = 0;
+  int wander_direction = 0;
+
+  while (wb_robot_step(time_step) != -1) {
+    double sensors_value[SENSOR_NUMBER];
+    for (int i = 0; i < SENSOR_NUMBER; i++) {
+      sensors_value[i] = wb_distance_sensor_get_value(sensors[i]);
+    }
+
+    go_forward(proposed_speeds);
+    obstacle_back(sensors_value, speed, proposed_speeds);
+
+    wander(proposed_speeds, &wander_remaining, &wander_direction, &wander_cooldown);
+    obstacle_back(sensors_value, speed, proposed_speeds);
+
+    avoid_right(sensors_value, proposed_speeds);
+    obstacle_back(sensors_value, speed, proposed_speeds);
+
+    speed[LEFT] = BOUND(speed[LEFT], -max_speed, max_speed);
+    speed[RIGHT] = BOUND(speed[RIGHT], -max_speed, max_speed);
+
+    wb_motor_set_velocity(left_motor, speed[LEFT]);
+    wb_motor_set_velocity(right_motor, speed[RIGHT]);
+  }
+}
+```
+
+[Code complet Architecture Subsomption](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q8.subsomption.c)
+
+**Vidéo:**
+
+[Téléchargement de la vidéo](https://github.com/JeremyGraffan/sia-td4/raw/master/video/q8.substomption.mp4)
+
+### Stratégie 2: Vote
+
+Notre première approche à consisté en une architecture par vote.
+Celle-ci possède 3 comportement:
+- avancer (`go_foward`)
+- éviter par la droite (`avoid_right`)
+- s'arrêter aux obstacles (`obstacle_stop`)
+Le comportement obstacle stop peut appliquer des vétos sur certains votes (par exemple les vitesses
+positives sur le moteur droit) pour éviter les collisions avec les obstacles.
+
+**Code:**
+
+
+```c
+void vote_architecture() {
+  double speed[2];
+  double proposed_speeds[2];
+
+  while (wb_robot_step(time_step) != -1) {
+    double sensors_value[SENSOR_NUMBER];
+    double veto_above[2] = {INFINITY, INFINITY};
+    double veto_below[2] = {-INFINITY, -INFINITY};
+    for (int i = 0; i < SENSOR_NUMBER; i++) {
+      sensors_value[i] = wb_distance_sensor_get_value(sensors[i]);
+    }
+
+    go_forward(proposed_speeds);
+    speed[LEFT] = proposed_speeds[LEFT];
+    speed[RIGHT] = proposed_speeds[RIGHT];
+
+    avoid_right(sensors_value, proposed_speeds);
+    speed[LEFT] += proposed_speeds[LEFT];
+    speed[RIGHT] += proposed_speeds[RIGHT];
+
+    obstacle_stop(sensors_value, veto_below, veto_above);
+    apply_vetos(speed, veto_below, veto_above);
+
+    speed[LEFT] = BOUND(speed[LEFT], -max_speed, max_speed);
+    speed[RIGHT] = BOUND(speed[RIGHT], -max_speed, max_speed);
+
+    wb_motor_set_velocity(left_motor, speed[LEFT]);
+    wb_motor_set_velocity(right_motor, speed[RIGHT]);
+  }
+}
+```
+[Code complet Architecture Vote](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q8.vote.c)
+
+**Vidéo:**
+
+[Téléchargement de la vidéo](https://github.com/JeremyGraffan/sia-td4/raw/master/video/q8.vote.mp4)
