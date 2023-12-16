@@ -5,19 +5,28 @@ header-includes:
   - \usepackage{amsmath}
 ---
 
-## Github avec les codes sources et les vidéos
-Lien: https://github.com/JeremyGraffan/sia-td4/tree/master
+## Code source et vidéos
 
-## Position et nom des capteurs
+Le code complet de réponse aux différentes questions ainsi que les vidéos sont disponibles sur notre [Repository GitHub](https://github.com/JeremyGraffan/sia-td4/tree/master).
+
+## Positionnement et nom des capteurs
 ![Positionnement des capteurs Khapera III](./image/capteurs.png)
 
 ## Question 2 (Simulateur)
 
+_Reprenez votre TD précédent et implémentez le déplacement de votre robot en ligne droite et son arrêt devant le premier obstacle rencontré._
+
 ### Principe de fonctionnement
-On utilise les 4 capteurs situés a l'avant du robot. Le robot avance en ligne droite avec une vitesse constante. Lorsque l'un des capteurs détecte un obstacle (valeur supérieur a une limite définie), on stop le robot. Si l'obstacle disparaît, le robot recommence a avancer en ligne droite.
+
+Pour arrêter le robot devant le premier obstacle rencontré 
+nous utilisons les 4 capteurs situés a l'avant du robot. 
+Le robot avance en ligne droite avec une vitesse constante. 
+Lorsque l'un des capteurs détecte un obstacle 
+(valeur supérieur a une limite définie), le robot s'arrête. 
+Si l'obstacle disparaît, le robot recommence a avancer en ligne droite.
 
 ### Vidéo
-Lien: https://github.com/JeremyGraffan/sia-td4/raw/master/video/q2.mp4
+[Téléchargement de la vidéo](https://github.com/JeremyGraffan/sia-td4/raw/master/video/q2.mp4)
 
 ### Code
 ```c
@@ -41,28 +50,36 @@ while (wb_robot_step(time_step) != -1) {
   wb_motor_set_velocity(right_motor, current_speed);
 }
 ```
-Lien: https://github.com/JeremyGraffan/sia-td4/blob/master/code/q2.c
+[Code complet](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q2.c)
+
+### Equation
+$$
+V_r = 
+\begin{cases}
+    9, & \text{if } \forall{x}\in{X_{front}}, x \leq 100\\
+    0,              & \text{otherwise}
+\end{cases}
+$$
+$$
+V_l = 
+\begin{cases}
+    9, & \text{if } \forall{x}\in{X_{front}}, x \leq 100\\
+    0,              & \text{otherwise}
+\end{cases}
+$$
 
 ## Question 3 (Simulateur)
 
-### Poids pour les capteurs 1 à 9
-`{-2.67, -2.67},  {-10.86, 21.37}, {-16.03, 26.71}, {-37.4, 37.4},   {37.4, -32.06},  {26.71, -21.37},  {21.37, -10.86}, {-2.67, -2.67},  {-5.34, -5.34}`
+_Avec le simulateur Webots, en utilisant le robot khepera III, implémentez cet algorithme en utilisant tous les proximétres du robot. Choisissez les bons poids pour que le robot est un comportement satisfaisant._
 
-<!-- TODO: transpose matrix -->
-<!-- $$ -->
-<!-- W =  -->
-<!-- \begin{pmatrix} -->
-<!-- -2.67 & -2.67 \\ -->
-<!-- -10.86 & 21.37 \\ -->
-<!-- -16.03 & 26.71 \\ -->
-<!-- -37.4 & 37.4 \\ -->
-<!-- 37.4 & -32.06 \\ -->
-<!-- 26.71 & -21.37 \\ -->
-<!-- 21.37 & -10.86 \\ -->
-<!-- -2.67 & -2.67 \\ -->
-<!-- -5.34 & -5.34 -->
-<!-- \end{pmatrix} -->
-<!-- $$ -->
+### Matrice de poids pour les capteurs 1 à 9
+$$
+W = 
+\begin{pmatrix}
+-2.67 & -10.86 & -16.03 & -37.4 & 37.4 & 26.71 & 21.37 & -2.67 & -5.34 \\
+-2.67 & 21.37 & 26.71 & 37.4 & -32.06 & -21.37 & -10.86 & -2.67 & -5.34
+\end{pmatrix}
+$$
 
 ### Équation
 $$ 
@@ -94,9 +111,11 @@ Vl = 1 * ( -2.67.X_0 -10.86.X_1 -16.03.X_2 \\
 $$
 
 ### Code
-Lien: https://github.com/JeremyGraffan/sia-td4/blob/master/code/q3.c
+
+[Code complet](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q3.c)
 
 ## Question 4
+_Comment implémenteriez-vous un réseau de neurones pour l’évitement d’obstacles selon braintenberg dans le cas de l’alphabot2 ?_
 
 Pour simuler l'AlphaBot dans le cadre du logiciel Webot nous avons réutilisé le Khepera III en conservant uniquement
 2 capteurs avant et en binarisant leur valeur (0 ou 1 à partir d'un seuil).
@@ -105,7 +124,7 @@ double binarize_sensor_value(double sensor_value) {
   return sensor_value > 40 ? 1 : 0;
 }
 
-void question_4() {
+void process() {
   const double alphabot_matrix[2][2] = {{-9, 9}, {9, -9}};
   const int alphabot_sensor_indexes[ALPHABOT_SENSOR_COUNT] = {2, 5};
   const double base_speed = 10;
@@ -137,6 +156,8 @@ void question_4() {
 Pour implémenter le réseau de neurone selon Braintenberg, nous utilisons une vitesse constante de 10
 et des poids symétriques de -9 et 9.
 
+[Code complet](https://github.com/JeremyGraffan/sia-td4/blob/master/code/q4.c)
+
 ### Équation
 Nous considérons $X_0$ le capteur gauche a $X_1$ le capteur droit.
 
@@ -146,6 +167,8 @@ $$ Vl = {k * \sum_{x=0}^{2} (W_{li}.X_i)} = {1 * ( 9.X_0 + -9.X_1 ) }$$
 
 
 ## Question 5
+
+_Si vous deviez fournir un algorithme d’évitement d’obstacle pour l’Alphabot2, sous forme d’un automate à état fini, quel serait-il (1) ? Implémentez et testez._
 
 ### Automate
 
@@ -206,14 +229,18 @@ void process() {
 ```
 
 ## Question 6 (Simulateur)
+_Quel algorithme mettriez-vous en place pour un suivi de contours d’obstacles par la droite sur le Khepera III ? Implémentez et testez._
 
 ### Vidéo
 
 #### Code
 
 ## Question 7
+_Si vous voulez implémenter un suivi de ligne grâce aux capteurs du robot Alphabot2, que proposeriez-vous comme algorithme ? Implémentez et testez._
 
 ## Question 8 (Simulateur)
+
+_Mettez en place deux stratégies de coordination différentes et testez les différences_
 
 ### Vidéo
 
