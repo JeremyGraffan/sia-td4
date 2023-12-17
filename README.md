@@ -316,6 +316,11 @@ void process() {
 ## Question 7
 _Si vous voulez implémenter un suivi de ligne grâce aux capteurs du robot Alphabot2, que proposeriez-vous comme algorithme ? Implémentez et testez._
 
+Pour implémenté un suivi de ligne sur l'Alphabot2, on peut utiliser les 5 capteurs infrarouges situés sous le robot.
+
+Une des solutions possible est d'utiliser Braintenberg en associant des poids entre chaque capteurs et chaque roues, de la même manière que l'évitement d'obstacle.
+Pour chacun des capteurs, on peut calculer la contribution à la vitesse des moteurs en fonction de la luminosité détectée et d'un poids défini.
+
 ## Question 8 (Simulateur)
 
 _Mettez en place deux stratégies de coordination différentes et testez les différences_
