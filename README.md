@@ -373,7 +373,7 @@ void subsumption_architecture() {
 
 **Vidéo:**
 
-[Téléchargement de la vidéo](https://github.com/JeremyGraffan/sia-td4/raw/master/video/q8.substomption.mp4)
+[Téléchargement de la vidéo](https://github.com/JeremyGraffan/sia-td4/raw/master/video/q8.subsumption.mp4)
 
 ### Stratégie 2: Vote
 
